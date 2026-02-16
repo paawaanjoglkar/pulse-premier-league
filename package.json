@@ -1,0 +1,31 @@
+{
+  "name": "pulse-premier-league",
+  "version": "1.1.0",
+  "description": "Offline Box Cricket Tournament Scoring Progressive Web Application",
+  "main": "index.html",
+  "scripts": {
+    "lint": "grep -r 'console\\.log' js/ --include='*.js' || exit 0",
+    "validate": "python3 -m json.tool manifest.json > /dev/null && echo 'JSON valid'",
+    "deploy": "echo 'Deploy to GitHub Pages'",
+    "test": "node tests/utils.test.js && node tests/cricket-logic.test.js && node tests/match-management.test.js && node tests/scoring-engine.test.js && node tests/statistics.test.js && node tests/awards.test.js && node tests/edge-cases.test.js",
+    "test:unit": "node tests/utils.test.js && node tests/cricket-logic.test.js",
+    "test:integration": "node tests/match-management.test.js && node tests/scoring-engine.test.js && node tests/statistics.test.js && node tests/awards.test.js",
+    "test:edge": "node tests/edge-cases.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paawaanjoglkar/SF-Metadata"
+  },
+  "keywords": [
+    "cricket",
+    "scoring",
+    "pwa",
+    "offline",
+    "tournament",
+    "box-cricket"
+  ],
+  "author": "Pulse Premier League Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

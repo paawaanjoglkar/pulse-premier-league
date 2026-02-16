@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Pulse Premier League - Offline Box Cricket Tournament Scoring App">
+    <meta name="theme-color" content="#1A1A6C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Pulse Premier League</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-content">
+            <button id="menu-btn" class="icon-btn" aria-label="Menu">☰</button>
+            <h1 class="app-title">PPL</h1>
+            <div class="header-status">
+                <span id="sync-status" class="sync-badge" title="Last synced"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Menu (Slide-out) -->
+    <nav id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <h2>Menu</h2>
+            <button id="menu-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <ul class="menu-list">
+            <li><a href="#" data-screen="dashboard">🏠 Dashboard</a></li>
+            <li><a href="#" data-screen="tournament-setup">⚙️ Tournament Setup</a></li>
+            <li><a href="#" data-screen="team-management">👥 Teams</a></li>
+            <li><a href="#" data-screen="player-management">🏃 Players</a></li>
+            <li><a href="#" data-screen="fixture-management">📅 Fixtures</a></li>
+            <li><a href="#" data-screen="points-table">📊 Points Table</a></li>
+            <li><a href="#" data-screen="player-stats">📈 Player Stats</a></li>
+            <li><a href="#" data-screen="awards">🏆 Awards</a></li>
+            <li><a href="#" data-screen="settings">⚙️ Settings</a></li>
+        </ul>
+    </nav>
+
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <!-- Main Content Area -->
+    <main id="app-main">
+
+        <!-- Dashboard Screen -->
+        <section id="dashboard-screen" class="screen active">
+            <div class="screen-header">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="screen-content">
+                <div id="tournament-info-widget" class="widget">
+                    <h3>Tournament Status</h3>
+                    <div id="tournament-info">
+                        <p class="no-data">No tournament configured</p>
+                    </div>
+                    <button id="setup-tournament-btn" class="btn btn-primary">Setup Tournament</button>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-cards">
+                        <button class="action-card" data-screen="fixture-management">
+                            <span class="card-icon">📅</span>
+                            <span class="card-label">Manage Fixtures</span>
+                        </button>
+                        <button class="action-card" data-screen="team-management">
+                            <span class="card-icon">👥</span>
+                            <span class="card-label">Manage Teams</span>
+                        </button>
+                        <button class="action-card" data-screen="points-table">
+                            <span class="card-icon">📊</span>
+                            <span class="card-label">Points Table</span>
+                        </button>
+                        <button class="action-card" id="export-excel-btn">
+                            <span class="card-icon">📥</span>
+                            <span class="card-label">Export to Excel</span>
+                        </button>
+                        <button class="action-card" id="sync-to-cloud-btn">
+                            <span class="card-icon">☁️</span>
+                            <span class="card-label">Sync to Cloud</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="upcoming-matches-widget" class="widget">
+                    <h3>Upcoming Matches</h3>
+                    <div id="upcoming-matches-list">
+                        <p class="no-data">No upcoming matches</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tournament Setup Screen -->
+        <section id="tournament-setup-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Tournament Setup</h2>
+            </div>
+            <div class="screen-content">
+                <form id="tournament-form" class="form-container">
+                    <div class="form-group">
+                        <label for="tournament-name">Tournament Name *</label>
+                        <input type="text" id="tournament-name" required placeholder="e.g., Pulse Premier League 2026">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="default-overs">Default Overs per Innings *</label>
+                        <input type="number" id="default-overs" min="1" max="20" value="5" required>
+                        <small>Can be changed per match before first ball</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max-overs-per-bowler">Max Overs per Bowler *</label>
+                        <input type="number" id="max-overs-per-bowler" min="1" max="5" value="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="enable-power-ball" checked>
+                            <span>Enable Power Ball (2x runs on 6th legal delivery)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-start-date">Start Date</label>
+                        <input type="date" id="tournament-start-date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-end-date">End Date</label>
+                        <input type="date" id="tournament-end-date">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Tournament</button>
+                        <button type="button" class="btn btn-secondary" data-screen="dashboard">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Team Management Screen -->
+        <section id="team-management-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Team Management</h2>
+            </div>
+            <div class="screen-content">
+                <div class="action-bar">
+                    <button id="add-team-btn" class="btn btn-primary">+ Add Team</button>
+                </div>
+                <div id="teams-list" class="list-container">
+                    <p class="no-data">No teams added yet</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Management Screen -->
+        <section id="player-management-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Player Management</h2>
+            </div>
+            <div class="screen-content">
+                <div class="action-bar">
+                    <select id="player-team-filter" class="filter-select">
+                        <option value="">All Teams</option>
+                    </select>
+                    <button id="add-player-btn" class="btn btn-primary">+ Add Player</button>
+                </div>
+                <div id="players-list" class="list-container">
+                    <p class="no-data">No players added yet</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fixture Management Screen -->
+        <section id="fixture-management-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Fixture Management</h2>
+            </div>
+            <div class="screen-content">
+                <div class="action-bar">
+                    <button id="add-fixture-btn" class="btn btn-primary">+ Add Fixture</button>
+                </div>
+                <div id="fixtures-list" class="list-container">
+                    <p class="no-data">No fixtures scheduled yet</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Match Setup Screen -->
+        <section id="match-setup-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="fixture-management">← Back</button>
+                <h2>Match Setup</h2>
+            </div>
+            <div class="screen-content">
+                <div id="match-setup-wizard" class="wizard">
+                    <!-- Dynamic wizard steps will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Scoring Screen -->
+        <section id="scoring-screen" class="screen">
+            <div class="screen-header scoring-header">
+                <button class="btn-back" id="scoring-back-btn">← Back</button>
+                <h2 id="scoring-match-title">Match Scoring</h2>
+            </div>
+            <div class="screen-content scoring-content">
+                <!-- Match summary bar -->
+                <div id="match-summary-bar" class="match-summary">
+                    <div id="innings-info"></div>
+                    <div id="score-display"></div>
+                </div>
+
+                <!-- Batter info -->
+                <div id="batter-info" class="batter-info">
+                    <div class="batter striker">
+                        <span class="label">Striker</span>
+                        <div id="striker-name"></div>
+                        <div id="striker-stats"></div>
+                    </div>
+                    <div class="batter non-striker">
+                        <span class="label">Non-Striker</span>
+                        <div id="non-striker-name"></div>
+                        <div id="non-striker-stats"></div>
+                    </div>
+                </div>
+
+                <!-- Bowler info -->
+                <div id="bowler-info" class="bowler-info">
+                    <span class="label">Bowler</span>
+                    <div id="bowler-name"></div>
+                    <div id="bowler-stats"></div>
+                </div>
+
+                <!-- Partnership & This Over -->
+                <div id="match-progress" class="match-progress">
+                    <div id="partnership-info"></div>
+                    <div id="this-over-display"></div>
+                </div>
+
+                <!-- Target info (2nd innings only) -->
+                <div id="target-info" class="target-info" style="display: none;"></div>
+
+                <!-- Scoring buttons -->
+                <div id="scoring-buttons" class="scoring-buttons">
+                    <div class="runs-row">
+                        <button class="run-btn" data-runs="0">0</button>
+                        <button class="run-btn" data-runs="1">1</button>
+                        <button class="run-btn" data-runs="2">2</button>
+                        <button class="run-btn" data-runs="3">3</button>
+                        <button class="run-btn" data-runs="4">4</button>
+                    </div>
+                    <div class="extras-row">
+                        <button class="extra-btn" data-extra="wide">Wide</button>
+                        <button class="extra-btn" data-extra="noball">No Ball</button>
+                        <button class="extra-btn" data-extra="bye">Bye</button>
+                        <button class="extra-btn" data-extra="legbye">Leg Bye</button>
+                    </div>
+                    <div class="action-row">
+                        <button class="wicket-btn" id="wicket-btn">WICKET</button>
+                    </div>
+                    <div class="control-row">
+                        <button class="btn btn-secondary" id="undo-btn">↶ Undo</button>
+                        <button class="btn btn-secondary" id="edit-balls-btn">✏️ Edit Balls</button>
+                        <button class="btn btn-secondary" id="scorecard-btn">📊 Scorecard</button>
+                        <button class="btn btn-secondary" id="commentary-btn">📝 Commentary</button>
+                        <button class="btn btn-secondary" id="history-btn">📋 History</button>
+                        <button class="btn btn-primary" id="end-over-btn" style="display: none;">End Over</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Match Summary Screen -->
+        <section id="match-summary-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="fixture-management">← Back</button>
+                <h2>Match Summary</h2>
+            </div>
+            <div class="screen-content">
+                <div id="match-summary-content">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Points Table Screen -->
+        <section id="points-table-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Points Table</h2>
+            </div>
+            <div class="screen-content">
+                <div class="action-bar">
+                    <button id="recalculate-points-btn" class="btn btn-secondary">🔄 Recalculate</button>
+                </div>
+                <div id="points-table-container">
+                    <p class="no-data">No matches completed yet</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Stats Screen -->
+        <section id="player-stats-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Player Statistics</h2>
+            </div>
+            <div class="screen-content">
+                <div class="stats-tabs">
+                    <button class="tab-btn active" data-tab="batting">Batting</button>
+                    <button class="tab-btn" data-tab="bowling">Bowling</button>
+                    <button class="tab-btn" data-tab="fielding">Fielding</button>
+                </div>
+                <div id="stats-content">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Awards Screen -->
+        <section id="awards-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Awards</h2>
+            </div>
+            <div class="screen-content">
+                <div id="awards-list">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Screen -->
+        <section id="settings-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" data-screen="dashboard">← Back</button>
+                <h2>Settings</h2>
+            </div>
+            <div class="screen-content">
+                <div class="settings-section">
+                    <h3>Appearance</h3>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span>Dark Mode</span>
+                    </label>
+                </div>
+
+                <div class="settings-section">
+                    <h3>GitHub Sync Configuration</h3>
+                    <form id="github-config-form">
+                        <div class="form-group">
+                            <label for="github-repo">Repository URL</label>
+                            <input type="text" id="github-repo" placeholder="https://github.com/username/repo">
+                            <small>Format: https://github.com/username/repository</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="github-token">Personal Access Token</label>
+                            <input type="password" id="github-token" placeholder="ghp_...">
+                            <small>Generate with 'repo' scope at github.com/settings/tokens</small>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save & Test</button>
+                        </div>
+                    </form>
+                    <div id="github-test-result"></div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Data Management</h3>
+                    <button id="clear-data-btn" class="btn btn-danger">Clear All Local Data</button>
+                    <small>⚠️ This will delete all tournament data. Sync to cloud first!</small>
+                </div>
+
+                <div class="settings-section">
+                    <h3>About</h3>
+                    <p><strong>Pulse Premier League</strong></p>
+                    <p>Version: 1.0.0</p>
+                    <p>Offline Box Cricket Tournament Scoring App</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Container -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <!-- Dynamic modal content -->
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="lib/xlsx.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/retry-logic.js"></script>
+    <script src="js/operation-queue.js"></script>
+    <script src="js/monitoring.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/powerball.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/mvp.js"></script>
+    <script src="js/awards.js"></script>
+    <script src="js/points.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
