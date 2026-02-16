@@ -4,26 +4,27 @@
  */
 
 const CACHE_NAME = 'ppl-cache-v1.1.0';
+const BASE_PATH = '/pulse-premier-league/';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/css/style.css',
-    '/js/app.js',
-    '/js/storage.js',
-    '/js/utils.js',
-    '/js/scoring.js',
-    '/js/powerball.js',
-    '/js/stats.js',
-    '/js/mvp.js',
-    '/js/points.js',
-    '/js/sync.js',
-    '/js/operation-queue.js',
-    '/js/monitoring.js',
-    '/js/retry-logic.js',
-    '/js/error-handler.js',
-    '/js/export.js',
-    '/lib/xlsx.min.js',
-    '/manifest.json'
+    BASE_PATH,
+    BASE_PATH + 'index.html',
+    BASE_PATH + 'css/style.css',
+    BASE_PATH + 'js/app.js',
+    BASE_PATH + 'js/storage.js',
+    BASE_PATH + 'js/utils.js',
+    BASE_PATH + 'js/scoring.js',
+    BASE_PATH + 'js/powerball.js',
+    BASE_PATH + 'js/stats.js',
+    BASE_PATH + 'js/mvp.js',
+    BASE_PATH + 'js/points.js',
+    BASE_PATH + 'js/sync.js',
+    BASE_PATH + 'js/operation-queue.js',
+    BASE_PATH + 'js/monitoring.js',
+    BASE_PATH + 'js/retry-logic.js',
+    BASE_PATH + 'js/error-handler.js',
+    BASE_PATH + 'js/export.js',
+    BASE_PATH + 'lib/xlsx.min.js',
+    BASE_PATH + 'manifest.json'
 ];
 
 // Install event - cache all files
